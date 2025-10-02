@@ -4,6 +4,7 @@ import {
   BlockStack,
   Checkbox,
   Text,
+  InlineStack,
   useApi,
   useApplyAttributeChange,
   useInstructions,
@@ -21,6 +22,9 @@ function Extension() {
   const instructions = useInstructions();
   const applyAttributeChange = useApplyAttributeChange();
 
+  const { checkout } = useApi();
+  const currentStep = getCurrentStep(checkout);
+
 
   // 2. Check instructions for feature availability, see https://shopify.dev/docs/api/checkout-ui-extensions/apis/cart-instructions for details
   if (!instructions.attributes.canUpdateAttributes) {
@@ -33,17 +37,36 @@ function Extension() {
     );
   }
 
+  function getCurrentStep(checkout) {
+  if (checkout?.selectedDeliveryOption) return 3;
+  if (checkout?.shippingAddress) return 2;
+  return 1;
+  }
+
   // 3. Render a UI
   return (
     <BlockStack border={"dotted"} padding={"tight"}>
-      <Banner title="checkout-progress-bar">
-        {translate("welcome", {
+      {/* <Banner title="checkout-progress-bar"> */}
+        {/* {translate("welcome", {
           target: <Text emphasis="italic">{extension.target}</Text>,
-        })}
-      </Banner>
-      <Checkbox onChange={onCheckboxChange}>
+        })} */}
+      {/* </Banner> */}
+      {/* <Checkbox onChange={onCheckboxChange}>
         {translate("iWouldLikeAFreeGiftWithMyOrder")}
-      </Checkbox>
+      </Checkbox> */}
+        <InlineStack alignment="center" spacing="base" blockAlignment="center" wrap={false}>
+          <Text fontWeight={'bolder'} color={'subdued'}>
+            פרטים
+          </Text>
+          <Text>-</Text>
+          <Text size="base" fontWeight={currentStep >= 2 ? 'bold' : 'normal'} color={currentStep >= 2 ? 'base' : 'subdued'}>
+            משלוח
+          </Text>
+          <Text>-</Text>
+          <Text size="base" fontWeight={currentStep >= 3 ? 'bold' : 'normal'} color={currentStep >= 3 ? 'base' : 'subdued'}>
+            תשלום
+          </Text>
+        </InlineStack>    
     </BlockStack>
   );
 

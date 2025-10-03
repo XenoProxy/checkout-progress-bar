@@ -10,9 +10,6 @@
     "generate": "shopify app generate",
     "deploy": "shopify app deploy"
   },
-  "dependencies": {
-    "@shopify/polaris": "^13.9.5"
-  },
   "trustedDependencies": [
     "@shopify/plugin-cloudflare"
   ],
